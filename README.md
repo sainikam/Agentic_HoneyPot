@@ -35,7 +35,7 @@ After Each Turn → Intelligence Extractor → Stop Decision
 
 ---
 
-## 🔌 API Contract
+##API Contract
 
 ### Request (from Mock Scammer API)
 
@@ -74,7 +74,7 @@ Headers: X-API-KEY
 
 ---
 
-## 🤖 Agent Logic
+##  Agent Logic
 
 1. Receive scam message  
 2. Analyze sentiment  
@@ -97,7 +97,7 @@ Headers: X-API-KEY
 
 ---
 
-## 🧪 Evaluation Metrics
+##  Evaluation Metrics
 
 - Engagement duration  
 - Number of turns  
@@ -107,7 +107,7 @@ Headers: X-API-KEY
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 - Python  
 - FastAPI  
@@ -116,29 +116,6 @@ Headers: X-API-KEY
 - Regex / JSON parsing  
 - Modular agent architecture
 
----
-
-## 🚀 Setup
-
-### 1. Install Dependencies
-
-pip install -r requirements.txt
-
-### 2. Run Ollama
-
-ollama pull llama3
-
-### 3. Start API
-
-uvicorn main:app --reload
-
----
-
-## 🧩 Team Contributions
-
-- Secure API & infrastructure  
-- Autonomous AI agent  
-- Intelligence extraction & metrics
 
 ---
 
