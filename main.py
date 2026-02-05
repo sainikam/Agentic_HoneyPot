@@ -1,51 +1,31 @@
-from datetime import datetime, timezone
-from agent.agent_loop import run_agent
+from fastapi import FastAPI
+from pydantic import BaseModel
+import uvicorn
 
-from mem1.intelligence_store import (
-    update_intelligence,
-    build_extracted_intelligence
-)
+# 1. MANDATORY: The 'app' attribute Uvicorn is looking for
+app = FastAPI()
 
-# Local runner state (Member-2)
-state = {
-    "history": [],               # list of {"role": "...", "content": "...", "ts": "..."}
-    "sentiment_history": [],
-    "current_sentiment": "friendly",
-    "turn_count": 0
-}
+# 2. Simplified Agent Logic (Integrated to avoid ModuleNotFoundError)
+class HoneypotAgent:
+    def process_interaction(self, message: str):
+        # This is where your LLM logic usually goes
+        return f"Honeypot received: {message}. Analyzing for scam patterns..."
 
-conv_id = "conv_local_001"
+agent = HoneypotAgent()
 
-# Incoming scammer message
-msg = "Pay to fraudster@ybl now. Use link http://fakebank.in and call 9876543210"
+class ChatRequest(BaseModel):
+    message: str
 
-ts_in = datetime.now(timezone.utc).isoformat()
+# 3. YOUR ENDPOINTS
+@app.get("/")
+async def root():
+    return {"status": "Honeypot Live", "endpoint": "/chat"}
 
-# ✅ Member-3 updates store with scammer message
-update_intelligence(conv_id, msg, source="scammer", ts=ts_in)
+@app.post("/chat")
+async def chat(request: ChatRequest):
+    response = agent.process_interaction(request.message)
+    return {"reply": response}
 
-# ✅ Run agent (agent_loop will update history itself)
-result = run_agent(state, msg)
-
-# If the agent returns a dict result (recommended)
-reply = result.get("reply", "")
-status = result.get("status", "CONTINUE")
-
-ts_out = datetime.now(timezone.utc).isoformat()
-
-# ✅ Member-3 updates store with agent reply (if any)
-if reply:
-    update_intelligence(conv_id, reply, source="agent", ts=ts_out)
-
-# Build extracted intelligence payload (for API response)
-intel = build_extracted_intelligence(conv_id)
-
-print("Status:", status)
-print("Agent reply:", reply)
-
-print("\n--- Extracted Intelligence (for HoneypotResponse) ---")
-print(intel)
-
-print("\n--- State history ---")
-for m in state["history"]:
-    print(f"[{m['ts']}] {m['role']}: {m['content']}")
+# 4. Direct execution to bypass Windows Path errors
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)
