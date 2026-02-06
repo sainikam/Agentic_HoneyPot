@@ -1,5 +1,10 @@
 from fastapi import FastAPI, Header, HTTPException
 from datetime import datetime, timezone
+import os
+from dotenv import load_dotenv
+
+# Load .env locally
+load_dotenv()
 
 from models import HoneypotRequest, HoneypotResponse, ExtractedIntelligence, EngagementMetrics
 from agent.agent_loop import run_agent
@@ -7,7 +12,7 @@ from mem1.intelligence_store import update_intelligence, build_extracted_intelli
 
 app = FastAPI()
 
-API_KEY = "secret123"   # move to Render ENV later
+API_KEY = os.getenv("HONEYPOT_API_KEY")
 
 @app.get("/")
 async def root():
@@ -20,20 +25,18 @@ async def honeypot(req: HoneypotRequest, x_api_key: str = Header(None)):
         raise HTTPException(401, "Invalid API Key")
 
     conv_id = req.metadata.get("conversation_id", "conv_default")
-
     ts = datetime.now(timezone.utc).isoformat()
 
-    # --- MEMBER 3 ---
+    # ---- MEMBER 3 EXTRACTION ----
     update_intelligence(conv_id, req.message, "scammer", ts)
 
-    # --- MEMBER 2 ---
+    # ---- MEMBER 2 AGENT ----
     state = {
         "history": [m.dict() for m in req.conversation_history],
         "turn_count": len(req.conversation_history)
     }
 
     result = run_agent(state, req.message)
-
     reply = result.get("reply", "")
 
     update_intelligence(conv_id, reply, "agent", ts)
