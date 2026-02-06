@@ -1,5 +1,5 @@
-from agent.llm_client import BedrockLLM
-from agent.json_utils import extract_json
+from llm_client import BedrockLLM
+from json_utils import extract_json
 
 llm = BedrockLLM(model="llama3")
 
@@ -33,3 +33,4 @@ Conversation:
             data[k] = [str(data[k])]
 
     return data
+
