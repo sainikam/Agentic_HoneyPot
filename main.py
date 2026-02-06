@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from models import HoneypotRequest, HoneypotResponse, ExtractedIntelligence, EngagementMetrics
-from agent.agent_loop import run_agent
-from mem1.intelligence_store import update_intelligence, build_extracted_intelligence
+from agent_loop import run_agent
+from intelligence_store import update_intelligence, build_extracted_intelligence
 
 app = FastAPI()
 
@@ -56,3 +56,4 @@ async def honeypot(req: HoneypotRequest, x_api_key: str = Header(None)):
         engagement_metrics=metrics,
         extracted_intelligence=ExtractedIntelligence(**intel)
     )
+
