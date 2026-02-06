@@ -1,6 +1,6 @@
-from agent.reply_generator import generate_agent_reply
-from agent.intelligence_extractor import extract_intelligence
-from agent.decision_engine import should_stop
+from reply_generator import generate_agent_reply
+from intelligence_extractor import extract_intelligence
+from decision_engine import should_stop
 
 def run_agent(state, scammer_message):
     # 1) update history
@@ -27,3 +27,4 @@ def run_agent(state, scammer_message):
         "reply": reply,
         "turn": state["turn_count"]
     }
+
