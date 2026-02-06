@@ -1,5 +1,5 @@
-from agent.llm_client import BedrockLLM
-from agent.decision_engine import map_strategy
+from llm_client import BedrockLLM
+from decision_engine import map_strategy
 
 llm = BedrockLLM(model="llama3")
 
@@ -39,3 +39,4 @@ Generate ONLY the reply text:
     reply = reply.replace("😟", "").replace("😰", "").strip()
 
     return reply
+
